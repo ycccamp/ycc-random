@@ -6,15 +6,17 @@ import * as serviceWorker from './serviceWorker'
 import firebase from 'firebase'
 
 const config = {
-  apiKey: 'AIzaSyD-B_AN7Ev0cbCtJTGrteL3FgGs7pkRljg',
-  authDomain: 'itcamp15-registration.firebaseapp.com',
-  databaseURL: 'https://itcamp15-registration.firebaseio.com',
-  projectId: 'itcamp15-registration',
-  storageBucket: 'itcamp15-registration.appspot.com',
-  messagingSenderId: '576206709323'
+  apiKey: 'AIzaSyD69fVmX1N539fYPjj4X2mu7hDR4LYAnL8',
+  authDomain: 'ycccamp.firebaseapp.com',
+  databaseURL: 'https://ycccamp.firebaseio.com',
+  projectId: 'ycccamp',
+  storageBucket: 'ycccamp.appspot.com',
+  messagingSenderId: '191460697180'
 }
 
 firebase.initializeApp(config)
+
+export const storage = firebase.storage()
 
 ReactDOM.render(<App />, document.getElementById('root'))
 

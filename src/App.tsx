@@ -1,20 +1,11 @@
 import React, {Component, Suspense} from 'react'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 import fiery from 'fiery'
-import firebase from 'firebase'
+import {signIn, signOut} from './fire'
+
+import Profile from './Profile'
 
 import logo from './logo.png'
-
-function signIn() {
-  firebase
-    .auth()
-    .signInWithPopup(new firebase.auth.FacebookAuthProvider())
-    .catch(e => window.alert(`Sorry, cannot sign in! ${e}`))
-}
-
-function signOut() {
-  if (window.confirm('RLY SIGN OUT?')) firebase.auth().signOut()
-}
 
 const Container = styled.div`
   width: 100%;
@@ -23,19 +14,31 @@ const Container = styled.div`
   text-align: center;
 `
 
-const Logo = styled.img`
-  @keyframes zoom {
-    0% {
-      transform: scale(0.9) rotate(0deg);
-    }
-    100% {
-      transform: scale(1.1) rotate(15deg);
-    }
+const Zoom = keyframes`
+  from {
+    transform: scale(0.9);
   }
-  animation: zoom 0.5s alternate infinite ease-in;
+  to {
+    transform: scale(1.1);
+  }
+`
+
+const ZoomRotate = keyframes`
+  from {
+    transform: scale(0.9) rotate(0deg);
+  }
+  to {
+    transform: scale(1.1) rotate(15deg);
+  }
+`
+
+const Logo = styled.img`
+  animation: ${ZoomRotate} 0.5s alternate infinite ease-in;
+  max-width: 300px;
 `
 
 const Button = styled.a`
+  animation: ${Zoom} 0.5s alternate infinite ease-in;
   font-family: 'FC Lamoon';
   font-size: 1.8rem;
   text-decoration: none;
@@ -58,10 +61,8 @@ const IndexPage = () => {
         <Button>Loading...</Button>
       ) : userState.failed ? (
         <Button onClick={userState.retry}>Try again!</Button>
-      ) : userState.data ? (
-        <div onClick={signOut}>Logged in</div>
       ) : (
-        <Button onClick={signIn}>Sign in</Button>
+        userState.data && <Button onClick={signIn}>Sign in</Button>
       )}
     </>
   )
@@ -72,16 +73,13 @@ const App = () => {
 
   return (
     <Container>
-      <Suspense fallback={<div>lelelelelelelel</div>}>
-        {userState.data ? (
-          <div>
-            <IndexPage />
-            {userState.data.displayName}
-          </div>
-        ) : (
-          <IndexPage />
-        )}
-      </Suspense>
+      {userState.data ? (
+        <div>
+          <Profile />
+        </div>
+      ) : (
+        <IndexPage />
+      )}
     </Container>
   )
 }
