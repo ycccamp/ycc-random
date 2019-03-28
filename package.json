@@ -2,6 +2,7 @@
   "name": "ycc-random",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://random.ycc.in.th",
   "dependencies": {
     "@types/jest": "24.0.11",
     "@types/node": "11.12.0",
@@ -14,7 +15,7 @@
     "react-dom": "^16.8.5",
     "react-scripts": "2.1.8",
     "styled-components": "^4.2.0",
-    "typescript": "3.3.4000"
+    "typescript": "^3.3.4000"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,6 +34,7 @@
   ],
   "devDependencies": {
     "@firebase/app-types": "0.x",
-    "@firebase/util": "0.x"
+    "@firebase/util": "0.x",
+    "tslint": "^5.14.0"
   }
 }

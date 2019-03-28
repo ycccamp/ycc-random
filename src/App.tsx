@@ -1,9 +1,11 @@
-import React, {Component, Suspense} from 'react'
+import React, {Component, Suspense, useState, useEffect} from 'react'
 import styled, {keyframes} from 'styled-components'
 import fiery from 'fiery'
+import firebase from 'firebase'
 import {signIn, signOut} from './fire'
 
 import Profile from './Profile'
+import Loading from './Loading'
 
 import logo from './logo.png'
 
@@ -51,19 +53,63 @@ const Button = styled.a`
   background-color: #fff66d;
 `
 
+const Title = styled.h1`
+  animation: ${Zoom} 0.5s alternate infinite ease-in;
+`
+
+const Background = styled.div`
+  background-color: ${props => props.color};
+  width: 100%;
+  height: 100%;
+`
+
 const IndexPage = () => {
   const userState = fiery.useFirebaseAuth()
   return (
     <>
       <Logo src={logo} />
-      <h1>Young Creator's Camp</h1>
+      <Title>Young Creator's Camp</Title>
       {userState.loading ? (
         <Button>Loading...</Button>
       ) : userState.failed ? (
         <Button onClick={userState.retry}>Try again!</Button>
+      ) : userState.data ? (
+        <Button onClick={signOut}>Sign out</Button>
       ) : (
-        userState.data && <Button onClick={signIn}>Sign in</Button>
+        <Button onClick={signIn}>Sign in</Button>
       )}
+    </>
+  )
+}
+
+const Announcement: React.FunctionComponent<{color: string}> = ({color}) => {
+  return <Background color={color} />
+}
+
+const ProfileWrapper: React.FunctionComponent<{id: string}> = ({id}) => {
+  const dataRef = firebase.database().ref(`config/show`)
+  const dataState = fiery.useFirebaseDatabase(dataRef)
+  const colorRef = firebase.database().ref(`team/${id}`)
+  const colorState = fiery.useFirebaseDatabase(colorRef)
+
+  const [ready, setReady] = useState(false)
+  const [color, setColor] = useState('')
+
+  useEffect(() => {
+    if (colorState.data) {
+      setColor(colorState.data)
+    }
+
+    setReady(dataState.data)
+  }, [dataState.data, colorState.data])
+
+  return (
+    <>
+      {ready ? <Announcement color={color} /> : <Profile />}
+      <div style={{display: 'none'}}>
+        {dataState.unstable_read()}
+        {colorState.unstable_read()}
+      </div>
     </>
   )
 }
@@ -73,13 +119,13 @@ const App = () => {
 
   return (
     <Container>
-      {userState.data ? (
-        <div>
-          <Profile />
-        </div>
-      ) : (
-        <IndexPage />
-      )}
+      <Suspense fallback={<Loading />}>
+        {userState.data ? (
+          <ProfileWrapper id={userState.data.uid} />
+        ) : (
+          <IndexPage />
+        )}
+      </Suspense>
     </Container>
   )
 }
