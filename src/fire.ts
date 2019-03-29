@@ -3,7 +3,7 @@ import firebase from 'firebase'
 export function signIn() {
   firebase
     .auth()
-    .signInWithPopup(new firebase.auth.FacebookAuthProvider())
+    .signInWithRedirect(new firebase.auth.FacebookAuthProvider())
     .catch(e => window.alert(`Sorry, cannot sign in! ${e}`))
 }
 
