@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {BrowserRouter, Route} from 'react-router-dom'
 import IndexPage from './IndexPage'
 import Question from './Question'
+import Timer from './Timer'
 
 const Container = styled.div`
   width: 100%;
@@ -17,6 +18,7 @@ const App = () => {
       <BrowserRouter>
         <Route exact path="/" component={IndexPage} />
         <Route path="/question/:id" component={Question} />
+        <Route exact path="/timer" component={Timer} />
       </BrowserRouter>
     </Container>
   )

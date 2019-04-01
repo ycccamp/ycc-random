@@ -24,6 +24,7 @@ const Question: React.FunctionComponent<{match: {params: {id: string}}}> = ({
 }) => {
   const [loading, setLoading] = useState(true)
   const [questions, setQuestions] = useState({
+    iD: 0,
     q: 'Loading',
     a: 'Loading',
     b: 'Loading',
@@ -41,6 +42,7 @@ const Question: React.FunctionComponent<{match: {params: {id: string}}}> = ({
           setQuestions(questions[0])
         } else {
           setQuestions({
+            iD: 0,
             q: 'Not Found!',
             a: 'Not Found!',
             b: 'Not Found!',
@@ -56,7 +58,9 @@ const Question: React.FunctionComponent<{match: {params: {id: string}}}> = ({
     <Loading />
   ) : (
     <QuestionContainer>
-      <h1>{questions.q}</h1>
+      <h1>
+        {questions.iD}. {questions.q}
+      </h1>
       <ol>
         <li>{questions.a}</li>
         <li>{questions.b}</li>
